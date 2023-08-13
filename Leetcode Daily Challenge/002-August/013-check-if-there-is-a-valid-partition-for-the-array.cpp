@@ -57,6 +57,27 @@ private:
         return dp[i] = result; 
     }
 
+    bool dcs(vector<int>& nums, int i, vector<int>& dp) {
+        if (i >= nums.size()) return 1;
+
+        if (dp[i] != -1) return dp[i];
+
+        // Rule - 1
+        if (i+1 < nums.size() && nums[i] == nums[i+1]) {
+            if( dcs(nums, i+2, dp) ) return dp[i] = 1;
+            
+            // Rule - 2
+            if (i+2 < nums.size() && nums[i+1] == nums[i+2])
+                if( dcs(nums, i+3, dp) ) return dp[i] = 1;
+        }
+
+        // Rule - 3
+        if (i+2 < nums.size() && nums[i] + 1 == nums[i+1] && nums[i] + 2 == nums[i+2]) {
+            if( dcs(nums, i+3, dp) ) return dp[i] = 1;
+        }
+        return dp[i] = false;
+    }
+
 public:
     bool validPartition(vector<int>& nums) {
         // // Recursive Solution -> TLE
@@ -66,5 +87,10 @@ public:
         // Recursion + Memoization
         vector<int> dp(nums.size()+1, -1);
         return solveMem(nums, 0, dp);
+
+
+        // different code style
+        vector<int> dp(nums.size()+1, -1);
+        return dcs(nums, 0, dp);
     }
 };
