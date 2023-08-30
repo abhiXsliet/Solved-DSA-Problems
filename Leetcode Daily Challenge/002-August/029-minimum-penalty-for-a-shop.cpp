@@ -111,6 +111,25 @@ private:
         }
         return minHour;
     }
+
+    // TC = O(N)
+    // SC = O(1)
+    int solve_greedy(string customers) {
+        int penalty = 0;       
+        int minPenalty = penalty, minHour = 0;
+
+        for(int i = 1; i <= customers.length(); i++) {
+            
+            if(customers[i-1] == 'Y') penalty--;
+            else penalty++;
+
+            if(penalty < minPenalty){
+                minPenalty = penalty;
+                minHour = i;
+            }
+        }
+        return minHour;
+    }
 public:
     int bestClosingTime(string customers) {
         
@@ -118,6 +137,8 @@ public:
 
         // return solve_better(customers);
 
-        return solve_optimal(customers);
+        // return solve_optimal(customers);
+
+        return solve_greedy(customers);
     }
 };
