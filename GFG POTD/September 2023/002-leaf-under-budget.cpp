@@ -121,7 +121,7 @@ struct Node
 class Solution
 {
 private:
-    void inorderTraversal(Node* root, int level, vector<int>& v) {
+    void preOrderTraversal(Node* root, int level, vector<int>& v) {
         
         // base case
         if (root == NULL) return;
@@ -130,8 +130,8 @@ private:
         if(root -> left == NULL && root -> right == NULL)
             v.push_back(level);
         
-        inorderTraversal(root -> left, level+1, v);
-        inorderTraversal(root -> right, level+1, v);
+        preOrderTraversal(root -> left, level+1, v);
+        preOrderTraversal(root -> right, level+1, v);
     }
     
 public:
@@ -139,7 +139,7 @@ public:
     {
         int cnt = 1;
         vector<int> reachLeafCount;
-        inorderTraversal(root, 1, reachLeafCount);
+        preOrderTraversal(root, 1, reachLeafCount);
 
         sort(begin(reachLeafCount), end(reachLeafCount));
         
