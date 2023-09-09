@@ -51,11 +51,25 @@ private:
         }
         return result;
     }
+    
+    // TC = O(N^2)
+    vector<vector<int>> solve_brute_2(int row) {
+        vector<vector<int>> result(row);
+        for (int i = 0; i < row; i++) {
+            result[i] = vector<int>(i+1, 1);
+            for (int j = 1; j < i; j++) {
+                result[i][j] = result[i-1][j] + result[i-1][j-1];
+            }
+        }
+        return result;
+    }
 
 public:
     vector<vector<int>> generate(int numRows) {
         // return solve_brute(numRows);
 
-        return solve_optimal(numRows);
+        // return solve_optimal(numRows);
+
+        return solve_brute_2(numRows);
     }
 };
