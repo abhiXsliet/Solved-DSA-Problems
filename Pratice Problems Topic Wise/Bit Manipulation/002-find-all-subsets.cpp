@@ -23,8 +23,27 @@ int main() {
         ans.push_back(temp);
     }
     for (auto& i : ans) {
-        for (auto& j : i) {
-            cout << j << " ";
+        if (i.empty())
+            cout << "{}" << " ";
+        else 
+        {
+        
+        /* 
+            cout << "{";
+            for (size_t j = 0; j < i.size(); j++) {
+                cout << i[j];
+                if (j < i.size() - 1) {
+                    cout << " ";
+                }
+            }
+            cout << "}";
+               
+        */  
+
+            // alternate way of doing above logic
+            cout << "{";
+            copy(i.begin(), i.end(), ostream_iterator<int>(cout, " "));
+            cout << "\b}"; // Remove the trailing space and add a closing curly brace
         }
         cout << endl;
     }
