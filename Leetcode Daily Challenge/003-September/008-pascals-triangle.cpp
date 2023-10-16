@@ -44,7 +44,7 @@ private:
     }
 
     // TC = O(N^2)
-    vector<vector<int>> solve_optimal(int row) {
+    vector<vector<int>> solve_optimal_1(int row) {
         vector<vector<int>> result;
         for (int i = 1; i <= row; i++) {
             result.push_back( generate_nth_row(i) );
@@ -53,7 +53,7 @@ private:
     }
     
     // TC = O(N^2)
-    vector<vector<int>> solve_brute_2(int row) {
+    vector<vector<int>> solve_optimal_2(int row) {
         vector<vector<int>> result(row);
         for (int i = 0; i < row; i++) {
             result[i] = vector<int>(i+1, 1);
@@ -68,8 +68,8 @@ public:
     vector<vector<int>> generate(int numRows) {
         // return solve_brute(numRows);
 
-        // return solve_optimal(numRows);
+        // return solve_optimal_1(numRows);
 
-        return solve_brute_2(numRows);
+        return solve_optimal_2(numRows);
     }
 };
