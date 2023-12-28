@@ -62,6 +62,34 @@ private:
         return t[0];
     }
 
+    // TC : O(N)
+    // SC : O(1)
+    int solve_so(string& s) {
+        int n = s.length();
+        
+        // prev = 1, & curr = 1 if the last char != '0'; otherwise, set it to 0
+        int prev = 1, curr = s[n - 1] != '0' ? 1 : 0;
+
+        for (int idx = n - 2; idx >= 0; idx--) {
+            // If curr char == '0', set curr = 0, & update prev = the old value of curr
+            if (s[idx] == '0') {
+                prev = curr;
+                curr = 0;
+            }
+            // If the curr char != '0', update curr to its old value.
+            // If the curr & next char form a valid two-digit number (<= 26),
+            // add the old value of prev to curr
+            else {
+                int temp = curr;
+                if (s[idx] == '1' || (s[idx] == '2' && s[idx + 1] <= '6'))
+                    curr += prev;
+                prev = temp;
+            }
+        }
+        // curr contains the total number of ways to decode the string
+        return curr;
+    }
+
     int solve_1(string& s) {
         int n = s.length();
         memset(t, -1, sizeof(t));
@@ -71,6 +99,8 @@ public:
     int numDecodings(string s) {
         // return solve_1(s);
 
-        return solve_tab(s);
+        // return solve_tab(s);
+
+        return solve_so(s);
     }
 };
