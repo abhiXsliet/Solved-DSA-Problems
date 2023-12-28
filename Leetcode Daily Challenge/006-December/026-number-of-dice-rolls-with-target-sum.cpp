@@ -56,11 +56,35 @@ private:
 
         return dp[n][target];
     }
+
+    // TC : O(n * k * target)
+    // SC : O(target)
+    int solve_so(int n, int k, int target) {
+        vector<int> dp(target+1, 0);
+        dp[0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            vector<int> new_dp(target+1, 0);
+            for (int j = 1; j <= target; j++) {
+                for (int face = 1; face <= k; face++) {
+                    if (j >= face) {
+                        new_dp[j] = (new_dp[j] + dp[j - face]) % MOD;
+                    }
+                }
+            }
+            dp = new_dp;
+        }
+
+        return dp[target];
+    }
+
 public:
     int numRollsToTarget(int n, int k, int target) {
         // memset(t, -1, sizeof(t));
         // return solve_mem(n, k, target);
 
-        return solve_tab(n, k, target);
+        // return solve_tab(n, k, target);
+
+        return solve_so(n, k, target);
     }
 };
