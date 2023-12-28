@@ -77,13 +77,95 @@ class Solution{
         // does not match case
         else return t[i][j] = false;
     }
+    
+    // TC : O(N*M)
+    // SC : O(N*M)
+    bool solve_tab(string& s, string& p) {
+        int m = s.length();
+        int n = p.length();
+        vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
+        
+        dp[m][n] = 1;
+        
+        // pattern p reamining
+        for (int j = n - 1; j >= 0; j--) {
+            bool flag = true;
+            for (int k = j; k < n; k++) {
+                if (p[k] != '*') {
+                    flag = false;
+                    break;
+                }
+            }
+            dp[m][j] = flag;
+        }
+        
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                // match case
+                if (s[i] == p[j] || p[j] == '?') {
+                    dp[i][j] = dp[i + 1][j + 1];
+                }
+                // match case
+                else if (p[j] == '*') {
+                    dp[i][j] = ( dp[i + 1][j] || dp[i][j + 1] );
+                }
+                // does not match case
+                else dp[i][j] = 0;
+            }
+        }
+        return dp[0][0];
+    }
+    
+    // TC : O(N*M)
+    // SC : O(M)
+    bool solve_so(string& s, string& p) {
+        int m = s.length();
+        int n = p.length();
+        vector<int> curr(m+1, 0);
+        vector<int> next(m+1, 0);
+        
+        next[n] = 1;
+        
+        // pattern p reamining
+        for (int j = n - 1; j >= 0; j--) {
+            bool flag = true;
+            for (int k = j; k < n; k++) {
+                if (p[k] != '*') {
+                    flag = false;
+                    break;
+                }
+            }
+            next[j] = flag;
+        }
+        
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                // match case
+                if (s[i] == p[j] || p[j] == '?') {
+                    curr[j] = next[j + 1];
+                }
+                // match case
+                else if (p[j] == '*') {
+                    curr[j] = ( next[j] || curr[j + 1] );
+                }
+                // does not match case
+                else curr[j] = 0;
+            }
+            next = curr;
+        }
+        return curr[0];
+    }
     public:
     bool match(string wild, string pattern)
     {
         // return solve_rec(pattern, wild, 0, 0);
         
-        memset(t, -1, sizeof(t));
-        return solve_mem(pattern, wild, 0, 0);
+        // memset(t, -1, sizeof(t));
+        // return solve_mem(pattern, wild, 0, 0);
+        
+        // return solve_tab(pattern, wild);
+        
+        return solve_so(pattern, wild);
     }
 };
 
