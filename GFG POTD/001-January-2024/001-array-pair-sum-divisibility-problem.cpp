@@ -35,7 +35,33 @@ class Solution {
             if (foundPair == false)
                 return 0;
         }
+        return 1;
+    }
+    
+    // TC : O(N*N)
+    // SC : O(1)
+    bool solve_better(vector<int>& nums, int k, int n) {
+        if (n % 2 != 0) 
+            return false;
         
+        for (int i = 0; i < n-1; i++) {
+            if (nums[i] == -1) continue;
+            bool foundPair = 0;
+            
+            for (int j = i + 1; j < n; j++) {
+                if (nums[j] == -1) continue;
+                
+                if (((nums[i] + nums[j]) % k) == 0) {
+                    nums[i] = -1;
+                    nums[j] = -1;
+                    
+                    foundPair = 1;
+                    break;
+                }
+            }
+            if (foundPair == false)
+                return 0;
+        }
         return 1;
     }
     
@@ -66,9 +92,11 @@ class Solution {
     }
   public:
     bool canPair(vector<int> nums, int k) {
-        return solve_brute(nums, k, nums.size());
+        // return solve_brute(nums, k, nums.size());
         
-        // return solve_optimal(nums, k, nums.size());
+        // return solve_better(nums, k, nums.size());
+        
+        return solve_optimal(nums, k, nums.size());
     }
 };
 
