@@ -1,5 +1,7 @@
 // https://www.geeksforgeeks.org/problems/find-element-occuring-once-when-all-other-are-present-thrice/1
 
+// Similar Question : https://leetcode.com/problems/single-number-ii/
+
 
 
 //{ Driver Code Starts
@@ -8,14 +10,34 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
 // } Driver Code Ends
 //User function Template for C++
 
 class Solution {
   private:
+    // TC : O(N^2)
+    // SC : O(1)
+    int solve_brute_1(int nums[], int n) {
+        for (int i = 0; i < n; i++) {
+            bool isUnique = 1;
+            for (int j = 0; j < n; j++) {
+                if (i != j && nums[i] == nums[j]) {
+                    isUnique = 0;
+                    break;
+                }
+            }
+
+            if(isUnique) {
+                return nums[i];
+            }
+        }
+        return 0;
+    }
+    
     // TC : O(N*log(N))
     // SC : O(N)
-    int solve_brute(int arr[], int n) {
+    int solve_brute_2(int arr[], int n) {
         sort(arr, arr + n);
         
         // Check first element
@@ -53,9 +75,52 @@ class Solution {
         return 0;
     }
     
+    // TC : O(32*N) ~= O(N)
+    // SC : O(1)
+    int solve_optimal_1(int nums[], int n) {
+        int mask = 1, ans = 0;
+        for (int i = 0; i < 32; i++) {
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                if (mask & nums[j]) 
+                    cnt ++;
+            }
+
+            if (cnt % 3 != 0) 
+                ans += mask;
+                
+            mask <<= 1;
+        }
+        return ans;
+    }
+    
+    // TC : O(N)
+    // SC : O(1)
+    int solve_optimal_2(int nums[], int n) {
+
+        // Step-1 : Initialize variable ones and twos
+        // ones stores if an element appears one time
+        // twos stores if the element appears 2nd times
+        // elements appeared 3rd times will neither stored in ones not in twos
+
+                                    // 2  2  3  2
+        int ele_appears_ones = 0;   // 2  0  1  3 --> 3 is the element which appeared only once
+        int ele_appears_twos = 0;   // 0  2  0  0
+
+        // Step-2: do calculations
+        for (int i = 0; i < n; i++) {
+            ele_appears_ones ^= nums[i];
+            ele_appears_ones &= (~ele_appears_twos);
+
+            ele_appears_twos ^= nums[i];
+            ele_appears_twos &= (~ele_appears_ones);
+        }
+        return ele_appears_ones;
+    }
+    
     // TC : O(32 * N) ~= O(N)
     // SC : O(32)     ~= O(1)
-    int solve_optimal_1(int arr[], int n) {
+    int solve_optimal_3(int arr[], int n) {
         int idx = 32;
         vector<int> storeBinary(idx, 0);
         
@@ -86,7 +151,7 @@ class Solution {
     
     // TC : = O(N)
     // SC : = O(1)
-    int solve_optimal_2(int arr[], int n) {
+    int solve_optimal_4(int arr[], int n) {
         // Initialize three_n to represent the 3n nature of numbers
         int three_n = -1;
         
@@ -122,13 +187,19 @@ class Solution {
     }
   public:
     int singleElement(int arr[] ,int N) {
-        // return solve_brute(arr, N);
+        // return solve_brute_1(arr, N);
+        
+        // return solve_brute_2(arr, N);
         
         // return solve_better(arr, N);
         
         // return solve_optimal_1(arr, N);
         
-        return solve_optimal_2(arr, N);
+        // return solve_optimal_2(arr, N);
+        
+        // return solve_optimal_3(arr, N);
+        
+        return solve_optimal_4(arr, N);
     }
 };
 
