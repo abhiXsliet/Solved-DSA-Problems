@@ -1,12 +1,13 @@
 // https://practice.geeksforgeeks.org/problems/maximum-of-all-subarrays-of-size-k3101/1
 
 
+
+
 //{ Driver Code Starts
 //Initial template for C++
 
 #include <bits/stdc++.h>
 using namespace std;
-
 
 // } Driver Code Ends
 //User function template for C++
@@ -30,7 +31,7 @@ class Solution
     
     // TC = O(N * K)
     // SC = O(1)
-    // SLIDING WINDOW APPROACH (using two pointer)
+    // SLIDING WINDOW APPROACH 
     vector<int> solve_better_1(int *arr, int n, int k) {
         vector<int> result;
         
@@ -49,9 +50,7 @@ class Solution
                         maxi = max(maxi, arr[i]);
                     }
                     maximum = maxi;
-                    
                 }
-                
                 left++;
             }
         }
@@ -87,7 +86,7 @@ class Solution
     
     // TC = O(N)
     // SC = O(K)
-    vector<int> solve_optimal(int *arr, int n, int k) {
+    vector<int> solve_optimal_1(int *arr, int n, int k) {
         vector<int> result;
         deque<int> dq;
         
@@ -112,6 +111,31 @@ class Solution
         
         return result;
     }
+    
+    // TC : O(N)
+    // SC : O(K) 
+    vector<int> solve_optimal_2(int* A, int n, int k) {
+        vector<int> result;
+        list<int> l;
+        
+        int i = 0, j = 0;
+        while (j < n) {
+            while(!l.empty() && l.back() < A[j]) {
+                l.pop_back();
+            }
+            l.push_back(A[j]);
+        
+            if (j - i + 1 > k) {
+                if(l.front() == A[i]) l.pop_front();
+                i++;
+            }
+            if (j - i + 1 == k) {
+                result.push_back(l.front());
+            }
+            j++;
+        }
+        return result;
+    }
   public:
     //Function to find maximum of each subarray of size k.
     vector <int> max_of_subarrays(int *arr, int n, int k)
@@ -122,9 +146,12 @@ class Solution
         
         // return solve_better_2(arr, n, k);
         
-        return solve_optimal(arr, n, k);
+        // return solve_optimal_1(arr, n, k);
+        
+        return solve_optimal_2(arr, n, k);
     }
 };
+
 
 //{ Driver Code Starts.
 
