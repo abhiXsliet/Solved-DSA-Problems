@@ -7,8 +7,8 @@ using namespace std;
 
 class Solution {
 private:
-    // TC : O(?)
-    // SC : O(?)
+    // TC : O(N^2)
+    // SC : O(N)
     int solve_brute(string& word, int k) {
         int n = word.length();
         int res = 1;
@@ -38,7 +38,7 @@ private:
         return res;
     }
     
-    // TC : O(?)
+    // TC : O(N)
     bool check(string& word, int i, int n) {
         // word -> 0 to (n - i) length tak ka string
         // word -> i to (n - i) length tak ka string
@@ -60,8 +60,8 @@ private:
         return i == n;
     }
     
-    // TC : O(?)
-    // SC : O(?)
+    // TC : O(N^2)
+    // SC : O(1)
     int solve_better_1(string& word, int k) {
         int n = word.length();
         
@@ -80,6 +80,8 @@ private:
         return res;
     }
     
+    // TC : O(N^2)
+    // SC : O(1)
     int solve_better_2(string& word, int k) {
         int n = word.length();
         
