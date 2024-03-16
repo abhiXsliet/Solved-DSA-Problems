@@ -9,46 +9,70 @@ class Solution {
 private:
     typedef long long ll;
     
-    // TC : O(N * log(N)) 
+    // TC : O(N)
     // SC : O(N)
-    int solve_brute(vector<int>& nums) {
-        unordered_map<ll, ll> mpp;
+    int solve_brute(vector<int>& nums, int n) {
+        unordered_map<ll, int> mpp;
         
         for (int num : nums) mpp[num] ++;
 
-        int maxCnt = 0;
+        // calculate for ones
+        int maxCnt = mpp.count(1) ? (mpp[1] % 2 == 0 ? mpp[1] - 1 : mpp[1]) : 0;
 
         for (int num : nums) {
-            
-            ll val = num;
             int cnt = 0;
+            ll val  = num;
+            while (mpp.count(val) && mpp[val] >= 2 && val != 1 && val <= 1e9) {
+                cnt += 2;
+                val *= val;
+            } 
             
-            while (mpp[val] > 1) {
-                if (val == 1) {
-                    if (mpp[val] % 2) cnt = mpp[val];
-                    else cnt = mpp[val] - 1;
+            if (mpp.count(val)) cnt++;
+            else cnt --;
 
-                    maxCnt = max(maxCnt, cnt);
-                    break;
-                }
-
-                cnt  += 2;    // subset of 2-elements
-                if (val > 1e5) break;
-                val *= val;   // lookup for the next element
-            }
-            if (mpp[val] == 0) cnt--;
-            
-            if (mpp[val] >= 1) {
-                if (mpp[val] == 1) cnt ++;
-                else cnt --;
-            }
-            
             maxCnt = max(maxCnt, cnt);
         }
         return maxCnt;
     }
+    
+    // TC : O(N) but at worst O(N*log(N)) since map is implemented using balanced bst (red-black tree) which takes log(N) for insertion, deletion, searching operations
+    // SC : O(N)
+    int solve_better(vector<int>& nums, int n) {
+        map<ll, int> mpp;
+        
+        for (int& num : nums) {
+            mpp[num] ++;
+        }
+        
+        int ans = 0;
+        for (auto& [ele, freq] : mpp) {
+            int maxEle = 0;
+            ll prevEle = ele;
+            
+            while(mpp.count(prevEle) && mpp[prevEle]) {
+                if (prevEle == 1) 
+                    maxEle += mpp[prevEle];
+                else if (mpp[prevEle] >= 2)
+                    maxEle += 2;
+                else if (mpp[prevEle] == 1) {
+                    maxEle += 1;
+                    break;
+                }
+                
+                mpp[prevEle] = 0;
+                
+                if (prevEle > 1e5) break;
+                prevEle *= prevEle;
+            }
+            
+            ans = max(ans, maxEle - (maxEle%2 == 0));
+        }
+        return ans;
+    }
 public:
     int maximumLength(vector<int>& nums) {
-        return solve_brute(nums);
+        // return solve_brute(nums, nums.size());
+
+        return solve_better(nums, nums.size());
     }
 };
