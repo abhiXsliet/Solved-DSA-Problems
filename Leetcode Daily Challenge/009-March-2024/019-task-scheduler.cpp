@@ -101,12 +101,37 @@ private:
         // Return the total time taken
         return time;
     }
+
+    // TC : O(N*log(N))
+    // SC : O(1)
+    int solve_3(vector<char>& tasks, int n) {
+        vector<int> freq(26, 0);
+        for(auto& task : tasks) {
+            freq[task - 'A'] ++;
+        }
+        
+        sort(rbegin(freq), rend(freq));
+        
+        int maxChar     = freq[0];
+        int separations = maxChar - 1;       // spaces b/w two similar char
+        int slots       = separations * n;   // Available Slots
+
+        for (int i = 1; i < 26; i++) {
+            slots -= min(freq[i], separations);
+        }
+
+        if (slots > 0) {
+            return tasks.size() + slots;
+        }
+
+        return tasks.size();
+    }
 public:
     int leastInterval(vector<char>& tasks, int n) {
         // return solve_1(tasks, n);
 
-        return solve_2(tasks, n);
+        // return solve_2(tasks, n);
 
-        // return solve_3(tasks, n);    // PENDING : Greedy
+        return solve_3(tasks, n);    // Greedy
     }
 };
