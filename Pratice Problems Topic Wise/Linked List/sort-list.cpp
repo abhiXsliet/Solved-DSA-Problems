@@ -7,7 +7,7 @@ using namespace std;
 
 /**
  * Definition for singly-linked list.
- * struct ListNode {
+ * ListNode* ListNode {
  *     int val;
  *     ListNode *next;
  *     ListNode() : val(0), next(nullptr) {}
@@ -82,6 +82,20 @@ private:
         return merged -> next;
     }
 
+    // TC : O(N + M)
+    // SC : O(N) -> Recursive Depth
+    ListNode* mergeRec(ListNode* first, ListNode* second) {
+        if (!first) return second;
+        if (!second) return first;
+
+        if (first -> val < second -> val) {
+            first -> next = mergeRec(first -> next, second);
+            return first;
+        } else {
+            second -> next = mergeRec(first, second -> next);
+            return second;
+        }
+    }
 
     // The double pointer-to-pointer `current` manages the next pointer of the node in the merged list, 
     // enabling efficient updates to next pointers, in-place modifications of LL without node creation, 
@@ -130,7 +144,8 @@ private:
         ListNode* right = mergeSort(middleNext);
 
         // return (mergeList(left, right)); // SC : O(N1 + N2)
-        return (merge(left, right));      // SC : O(1)
+        // return mergeRec(left, right);    // SC : O(1) Recursion
+        return (merge(left, right));        // SC : O(1)
     }
 public:
     ListNode* sortList(ListNode* head) {
