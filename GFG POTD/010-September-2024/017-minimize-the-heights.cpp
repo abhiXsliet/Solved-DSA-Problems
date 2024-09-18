@@ -16,19 +16,22 @@ class Solution {
         
         sort(begin(arr), end(arr));
         
-        int mini    = arr[0];
-        int maxi    = arr[n - 1];
-        int minDiff = maxi - mini;
-
-        for (int i = 1; i < n - 1; i ++) {
-            if (arr[i] >= k) {  
-                int maxEl = max(arr[i - 1] + k, maxi - k);
-                int minEl = min(arr[i] - k, mini + k);
+        int maxi = arr[n - 1];
+        int mini = arr[0];
+        int maxDiff = maxi - mini;  // initial difference b/w maxium and minimum
+        
+        int maxEle = 0, minEle = 0; // calculating next maximum and minimum
+        
+        for (int i = 1; i < n; i ++) {
+            if (arr[i] >= k) {
+                maxEle  = max(arr[i-1] + k, maxi - k);  // try to reduce maximum
+                minEle  = min(arr[i] - k  , mini + k);  // try to increase minimum
                 
-                minDiff = min(minDiff, maxEl - minEl);
+                maxDiff = min(maxDiff, maxEle - minEle);
             }
         }
-        return minDiff;
+        
+        return maxDiff;
     }
 };
 
