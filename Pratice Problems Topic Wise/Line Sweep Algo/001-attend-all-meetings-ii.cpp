@@ -9,8 +9,10 @@ using namespace std;
 // } Driver Code Ends
 
 class Solution {
-  public:
-    int minMeetingRooms(vector<int> &start, vector<int> &end) {
+  private:
+    // TC : O(N*log(N))
+    // SC : O(N)
+    int approach_1(vector<int>& start, vector<int>& end) {
         // minimum no. of meeting rooms would be the max cut in the range
         int n = start.size();
         vector<pair<int, char>> ranges;
@@ -39,11 +41,45 @@ class Solution {
         }
         return maxCut;
     }
+    
+    // TC : O(N*log(N))
+    // SC : O(N)
+    int approach_2(vector<int>& start, vector<int>& end) {
+        int n = start.size();
+        vector<pair<int, int>> ranges;
+        for (int i = 0; i < n; i++) {
+            ranges.push_back({start[i], end[i]});
+        }
+        // Sort the ranges based on their start times
+        sort(ranges.begin(), ranges.end());
+    
+        int result = 0;
+        priority_queue<int, vector<int>, greater<int>> minHeap; // Min-heap to track end times
+    
+        for (int i = 0; i < n; i++) {
+            // Remove ranges from the heap that do not overlap with the current range
+            while (!minHeap.empty() && minHeap.top() <= ranges[i].first) {
+                minHeap.pop();
+            }
+            // Add the current range's end time to the heap
+            minHeap.push(ranges[i].second);
+            // Update the result with the maximum heap size
+            result = max(result, (int)minHeap.size());
+        }
+    
+        return result;
+    }
+  public:
+    int minMeetingRooms(vector<int> &start, vector<int> &end) {
+        // return approach_1(start, end);   // Line Sweep Algo
+        return approach_2(start, end);      // using min-Heap
+    }
 };
 
 
 //{ Driver Code Starts.
 //Back-end complete function template in C++
+
 int main() {
     int t;
     cin >> t;
