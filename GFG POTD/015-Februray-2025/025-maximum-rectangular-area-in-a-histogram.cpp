@@ -11,59 +11,88 @@ using namespace std;
 
 class Solution {
   private:
-    vector<int> nextSmallerElement(vector<int>& arr, int n) {
-        stack<int> s;
-        s.push(-1);
-        vector<int> ans(n);
-        for(int i=n-1; i>=0; i--) {
-            int curr = arr[i];
-            while((s.top() != -1) && (arr[s.top()] >= curr)) {
-                s.pop();
+    // TC : O(N)
+    // SC : O(N)
+    vector<int> getNse(vector<int>& arr, int n) {
+        vector<int> result(n, n);   // initialized with last index if there's no smaller
+        stack<int> stk;
+        for (int i = 0; i < n; i ++) {
+            while (!stk.empty() && arr[i] < arr[stk.top()]) {
+                result[stk.top()] = i;
+                stk.pop();
             }
-            //ans is stack top
-            ans[i] = s.top();
-            s.push(i);
-        }
-        return ans;
+            stk.push(i);
+        }        
+        return result;
     }
 
-    vector<int> prevSmallerElement(vector<int>& arr, int n) {
-        stack<int> s;
-        s.push(-1);
-        vector<int>ans(n);
-
-        for(int i=0; i<n; i++) {
-            int curr = arr[i];
-            while((s.top() != -1) && (arr[s.top()] >= curr)) {
-                s.pop();
+    // TC : O(N)
+    // SC : O(N)
+    vector<int> getPse(vector<int>& arr, int n) {
+        vector<int> result(n, -1);   // initialized with -1-index if there's no smaller previous elements
+        stack<int> stk;
+        for (int i = n - 1; i >= 0; i --) {
+            while (!stk.empty() && arr[i] < arr[stk.top()]) {
+                result[stk.top()] = i;
+                stk.pop();
             }
-
-            //ans is top of stack
-            ans[i] = s.top();
-            s.push(i);
+            stk.push(i);
+        }        
+        return result;
+    }
+    
+    // TC : O(N)
+    // SC : O(N)
+    int approach_1(vector<int>& arr, int n) {
+        vector<int> nse = getNse(arr, n);
+        vector<int> pse = getPse(arr, n);
+        
+        int maxArea = 0;
+        for (int i = 0; i < n; i ++) {
+            int b = nse[i] - pse[i] - 1;
+            int area = arr[i] * b;
+            maxArea = max(maxArea, area);
         }
-        return ans;
+        return maxArea;
+    }
+
+    // TC : O(N)
+    // SC : O(N)
+    int approach_2(vector<int>& arr, int n) {
+        stack<int> stk;
+        int maxArea = 0;
+        for (int i = 0; i < n; i ++) {
+            while (!stk.empty() && arr[i] < arr[stk.top()]) {
+                int idx = stk.top();
+                stk.pop();
+
+                int nse = i;
+                int pse = stk.empty() ? -1 : stk.top();
+                
+                int b = nse - pse - 1;  // width
+                int area = arr[idx] * b;
+                maxArea = max(maxArea, area);
+            }
+            stk.push(i);
+        }
+        
+        while (!stk.empty()) {
+            int idx = stk.top();
+            stk.pop();
+            
+            int nse = n;
+            int pse = stk.empty() ? -1 : stk.top();
+            
+            int b = nse - pse - 1;
+            int area = arr[idx] * b;
+            maxArea = max(maxArea, area);
+        }
+        return maxArea;
     }
   public:
-    int getMaxArea(vector<int> &heights) {
-        int n = heights.size();
-
-        vector<int> next(n);
-        next = nextSmallerElement(heights, n);
-
-        vector<int> prev(n);
-        prev = prevSmallerElement(heights, n);
-
-        int area = INT_MIN;
-        for(int i=0; i<n; i++)
-        {
-            int l = heights[i];            
-            if(next[i] == -1) next[i] = n;
-            int b = next[i] - prev[i] - 1;
-            int newArea = l*b;
-            area = max(area, newArea);
-        }
-        return area;
+    int getMaxArea(vector<int> &arr) {
+        // return approach_1(arr, arr.size());  // THREE - PASS
+        return approach_2(arr, arr.size());  // ONE - PASS : While finding NSE, second elements from top of stack will be the PSE
     }
 };
 
