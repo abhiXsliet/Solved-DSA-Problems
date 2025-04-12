@@ -1,7 +1,7 @@
 // https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/
 
 // similar to : https://leetcode.com/problems/continuous-subarrays/
-
+// similar to : https://www.geeksforgeeks.org/problems/longest-bounded-difference-subarray/1
 
 #include <bits/stdc++.h>
 using namespace std;
