@@ -10,6 +10,8 @@ using namespace std;
 
 class Solution {
   private:
+    // TC : O(N)
+    // SC : O(1)
     int ncr(int n, int r) {
         int ans = 1;
         if (n == r) return ans;
@@ -35,20 +37,33 @@ class Solution {
         return prev;
     }
 
-    // TC : O(N)
+    // TC : O(N^2)
     // SC : O(N)
     vector<int> approach_2(int n) {
         vector<int> prev(n, 1);
-        int row = n - 1;
         for (int i = 1; i < n - 1; i ++) {
-            prev[i] = ncr(row, i);
+            prev[i] = ncr(n - 1, i);
         }
         return prev;
+    }
+
+    // TC : O(N)
+    // SC : O(N)
+    vector<int> approach_3(int n) {
+        vector<int> result(n, 1);
+        int ans = 1;
+        for (int i = 1; i < n - 1; i ++) {
+            ans *= (n - i);
+            ans /= (i);
+            result[i] = ans;
+        }
+        return result;
     }
   public:
     vector<int> nthRowOfPascalTriangle(int n) {
         // return approach_1(n);
-        return approach_2(n);    // Math(ncr) : slightly better
+        // return approach_2(n);    // Math(ncr) : slightly better
+        return approach_3(n);
     }
 };
 
