@@ -9,7 +9,7 @@ using namespace std;
 class Solution {
   private:
     // returns the cnt of no. less than or equal to tar
-    int cntLessThanK(vector<vector<int>> &matrix, int tar, int k) {
+    int cntLessThanK(vector<vector<int>> &matrix, int tar) {
         int n = matrix.size();
         int cnt = 0;    
         for (int i = 0; i < n; i ++) {
@@ -26,7 +26,7 @@ class Solution {
         int high = matrix[n - 1][n - 1];
         while (low <= high) {
             int mid = low + (high - low) / 2;
-            if (cntLessThanK(matrix, mid, k) >= k) {
+            if (cntLessThanK(matrix, mid) >= k) {
                 high = mid - 1;
             } else {
                 low = mid + 1;
