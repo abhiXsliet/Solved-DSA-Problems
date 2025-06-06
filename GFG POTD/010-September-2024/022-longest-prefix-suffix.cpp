@@ -10,24 +10,51 @@ using namespace std;
 
 // User function template for C++
 class Solution {
-  public:
+  private:
     // TC : O(N)
-    // SC : O(N) where N = s.length()
-    int lps(string s) {
+    // SC : O(N)
+    int approach_1(string &s) {
         int n = s.length();
-        vector<int> prefix(n, 0);
+        vector<int> lps(n, 0);
         
         for (int i = 1; i < n; i ++) {
-            int j = prefix[i - 1];
-            
-            while (j > 0 && s[j] != s[i])
-                j = prefix[j - 1];
-            
-            if (s[j] == s[i]) j ++;
-            prefix[i] = j;
+            int j = lps[i - 1];
+            while (j > 0 && s[i] != s[j]) {
+                j = lps[j - 1];
+            }
+            if (s[i] == s[j]) j ++;
+            lps[i] = j;
         }
         
-        return prefix[n - 1];
+        return lps[n - 1];
+    }
+    
+    // TC : O(N)
+    // SC : O(N)
+    int approach_2(string &s) {
+        int n = s.length();
+        vector<int> lps(n, 0);
+        int result = 0, len = 0, j = 1;
+        while (j < n) {
+            if (s[len] == s[j]) {
+                len ++;
+                lps[j] = len;
+                j ++;
+            } else {
+                if (len != 0) {    
+                    len = lps[len - 1];
+                } else {
+                    lps[j] = 0;
+                    j ++;
+                }
+            }
+        }
+        return lps[n - 1];
+    }
+  public:
+    int longestPrefixSuffix(string &s) {
+        // return approach_1(s);   
+        return approach_2(s);   // best : no inner while loop
     }
 };
 
@@ -47,7 +74,7 @@ int main() {
 
         Solution ob;
 
-        cout << ob.lps(str) << "\n";
+        cout << ob.longestPrefixSuffix(str) << "\n";
     }
 
     return 0;
