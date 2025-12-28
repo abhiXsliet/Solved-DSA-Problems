@@ -4,34 +4,38 @@
 using namespace std;
 
 class Solution {
-public:
+  public:
     int cntWays(vector<int>& arr) {
         int n = arr.size();
+        int leftOdd = 0, leftEven = 0;
+        int rightOdd = 0, rightEven = 0;
         
-        int totalEven = 0, totalOdd = 0;
-        for(int i = 0; i < n; i++) {
-            if(i % 2 == 0) totalEven += arr[i];
-            else totalOdd += arr[i];
+        for (int i = 0; i < n; i ++) {
+            if (i % 2) {
+                rightOdd += arr[i];
+            } else {
+                rightEven += arr[i];
+            }
         }
-
-        int leftEven = 0, leftOdd = 0;
+        
+        
         int ans = 0;
+        for (int i = 0; i < n; i ++) {
+            if (i % 2) {
+                rightOdd -= arr[i];
+            } else {
+                rightEven -= arr[i];
+            }
 
-        for(int i = 0; i < n; i++) {
-            // remove current element from total
-            if(i % 2 == 0) totalEven -= arr[i];
-            else totalOdd -= arr[i];
-
-            // after deletion, right side parity flips
-            int newEven = leftEven + totalOdd;
-            int newOdd  = leftOdd + totalEven;
-
-            if(newEven == newOdd)
-                ans++;
-
-            // add current element to left sums
-            if(i % 2 == 0) leftEven += arr[i];
-            else leftOdd += arr[i];
+            if (leftOdd + rightEven == leftEven + rightOdd) {
+                ans += 1;
+            }
+            
+            if (i % 2) {
+                leftOdd += arr[i];
+            } else {
+                leftEven += arr[i];
+            }
         }
         return ans;
     }
