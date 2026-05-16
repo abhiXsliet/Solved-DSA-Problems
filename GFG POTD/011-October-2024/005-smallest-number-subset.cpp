@@ -38,8 +38,9 @@ class Solution {
     }
     
     // TC : O(N)
-    // SC : O(1)
-    ll approach_2(vector<int>& arr) {
+    // SC : O(1)    
+    ll approach_1(vector<int>& arr) {
+        sort(begin(arr), end(arr));
         ll currSmallest = 1;
         for (int& num : arr) {
             if (currSmallest >= num) {
